@@ -3,6 +3,7 @@ import { useAccount } from "wagmi";
 import ChainInfo from "./ChainInfo";
 import Disconnect from "./Disconnect";
 import Tests from "./Tests";
+import Checkout from "./Tests/Checkout";
 
 const Connected = () => {
   const { address, chain, chainId } = useAccount();
@@ -13,7 +14,8 @@ const Connected = () => {
       </Text>
       <Disconnect />
       {chain && <ChainInfo chain={chain} address={address!} />}
-      <Tests chainId={chainId!} />
+      {/* <Tests chainId={chainId!} /> */}
+      <Checkout/>
     </>
   );
 };

@@ -5,6 +5,8 @@ import { createConfig, http, WagmiProvider } from "wagmi";
 import chains from "./utils/chains";
 import "@0xsequence/design-system/styles.css";
 import { KitCheckoutProvider } from "@0xsequence/kit-checkout";
+import { defaultChainId } from "./salesConfigs";
+import { KitWalletProvider } from "@0xsequence/kit-wallet";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -24,7 +26,7 @@ const App = () => {
     appleClientId,
     appleRedirectURI,
     /* Arbitrum sepolia chainId */
-    defaultChainId: 421614,
+    defaultChainId,
     appName: "Kit Starter",
     projectAccessKey,
   });
@@ -51,7 +53,9 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <KitProvider config={kitConfig}>
           <KitCheckoutProvider>
-            <Home />
+            <KitWalletProvider>
+              <Home />
+            </KitWalletProvider>
           </KitCheckoutProvider>
         </KitProvider>
       </QueryClientProvider>

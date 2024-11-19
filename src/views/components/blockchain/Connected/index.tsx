@@ -4,9 +4,13 @@ import ChainInfo from "./ChainInfo";
 import Disconnect from "./Disconnect";
 import Tests from "./Tests";
 import Checkout from "./Tests/Checkout";
+import { salesConfigs } from "../../../../salesConfigs";
 
 const Connected = () => {
   const { address, chain, chainId } = useAccount();
+  const currentChainId = chainId || 80002;
+  const saleConfig = salesConfigs.find((sale) => sale.chainId === currentChainId);
+
   return (
     <>
       <Text variant="large" fontWeight="bold" color="text100">
@@ -15,7 +19,7 @@ const Connected = () => {
       <Disconnect />
       {chain && <ChainInfo chain={chain} address={address!} />}
       {/* <Tests chainId={chainId!} /> */}
-      <Checkout/>
+      {saleConfig ? <Checkout saleConfig={saleConfig}/> : <div>No sale detected in this chain</div>}
     </>
   );
 };

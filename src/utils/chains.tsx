@@ -1,14 +1,9 @@
-import {
-  mainnet,
-  polygon,
-  Chain,
-  polygonAmoy,
-  arbitrumSepolia,
-} from "wagmi/chains";
+import type { Chain } from "wagmi/chains";
+import { salesConfigs } from "../salesConfigs";
+import { getChainConfig } from "./primarySales/helpers";
 
-const chains = [mainnet, polygon, polygonAmoy, arbitrumSepolia] as [
-  Chain,
-  ...Chain[],
-];
+const chains = Array.from(
+  new Set(salesConfigs.map((item) => getChainConfig(item.chainId))),
+) as [Chain, ...Chain[]];
 
 export default chains;

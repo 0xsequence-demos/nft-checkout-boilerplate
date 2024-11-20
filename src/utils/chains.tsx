@@ -1,9 +1,14 @@
 import type { Chain } from "wagmi/chains";
-import { salesConfigs } from "../salesConfigs";
-import { getChainConfig } from "./primarySales/helpers";
+import { saleConfig } from "../saleConfig";
+import { getDefaultChains } from "@0xsequence/kit";
 
-const chains = Array.from(
-  new Set(salesConfigs.map((item) => getChainConfig(item.chainId))),
-) as [Chain, ...Chain[]];
+function getChainConfig(chainId: number): Chain {
+  return getDefaultChains([chainId])[0];
+}
+
+const chains = Array.from(new Set([getChainConfig(saleConfig.chainId)])) as [
+  Chain,
+  ...Chain[],
+];
 
 export default chains;

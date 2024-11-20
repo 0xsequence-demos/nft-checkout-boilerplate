@@ -3,13 +3,9 @@ import { useAccount } from "wagmi";
 import ChainInfo from "./ChainInfo";
 import Disconnect from "./Disconnect";
 import Tests from "./Tests";
-import Checkout from "./Tests/Checkout";
-import { salesConfigs } from "../../../../salesConfigs";
 
 const Connected = () => {
-  const { address, chain, chainId } = useAccount();
-  const currentChainId = chainId || 80002;
-  const saleConfig = salesConfigs.find((sale) => sale.chainId === currentChainId);
+  const { address, chain } = useAccount();
 
   return (
     <>
@@ -18,8 +14,7 @@ const Connected = () => {
       </Text>
       <Disconnect />
       {chain && <ChainInfo chain={chain} address={address!} />}
-      {/* <Tests chainId={chainId!} /> */}
-      {saleConfig ? <Checkout saleConfig={saleConfig}/> : <div>No sale detected in this chain</div>}
+      <Tests />
     </>
   );
 };

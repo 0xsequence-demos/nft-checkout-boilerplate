@@ -1,65 +1,43 @@
 import { useAccount } from "wagmi";
 import CheckoutWithSequencePay from "../../../CheckoutWithSequencePay";
 import { useERC1155SaleContractPaymentModal } from "@0xsequence/kit-checkout";
+import { saleConfig } from "../../../../../saleConfig";
 
-export interface OnClickSelectPaymentProps {
-  (tokenId: string, quantity: number, onSuccessAction: () => void, onErrorAction: (error: Error) => void): void;
-}
-
-const Checkout = ({ saleConfig }) => {
+const TestCheckout = () => {
 	const { address } = useAccount();
-	const { openERC1155SaleContractPaymentModal } = useERC1155SaleContractPaymentModal();
+	const { openERC1155SaleContractPaymentModal } = useERC1155SaleContractPaymentModal()
 
-	const onClickSelectPayment: OnClickSelectPaymentProps = (tokenId, quantity, onSuccessAction, onErrorAction) => {
-    if (!address || !quantity || !tokenId) {
+	const onClickSelectPayment = () => {
+    if (!address) {
       return
     }
-    
-    // NATIVE token sale
-    // const currencyAddress = ethers.ZeroAddress
-    // const salesContractAddress = '0xf0056139095224f4eec53c578ab4de1e227b9597'
-    // const collectionAddress = '0x92473261f2c26f2264429c451f70b0192f858795'
-    // const price = '200000000000000'
-
-    // // ERC-20 contract
-    const currencyAddress = '0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582' // USDC
-    // Primary Sales Erc1155 contract
-    const salesContractAddress = saleConfig.salesContractAddress;
-    // NFT Contract
-    const collectionAddress = saleConfig.nftTokenAddress;
-    const price = 1000;
-
-    const chainId = saleConfig.chainId;
-    const formmatedPrice = (quantity * price).toString();
-    const formmatedQuantity = quantity.toString();
 
     openERC1155SaleContractPaymentModal({
       collectibles: [
         {
-          tokenId,
-          quantity: formmatedQuantity
+          tokenId: saleConfig.itemForSale,
+          quantity: '1'
         }
       ],
-      chain: chainId,
-      price: formmatedPrice,
-      targetContractAddress: salesContractAddress,
+      chain: saleConfig.chainId,
+      price: saleConfig.price,
+      targetContractAddress: saleConfig.salesContractAddress,
       recipientAddress: address,
-      currencyAddress,
-      collectionAddress,
+      currencyAddress: saleConfig.currencyAddress,
+      collectionAddress: saleConfig.nftTokenAddress,
       creditCardProviders: ['sardine'],
       isDev: true,
       copyrightText: 'ⓒ2024 Sequence',
       onSuccess: (txnHash: string) => {
-        console.log('success!', txnHash);
-        onSuccessAction();
+        console.log('success!', txnHash)
       },
       onError: (error: Error) => {
-        onErrorAction(error);
+        console.error(error)
       }
     })
   }
 
-  return <CheckoutWithSequencePay onClickSelectPayment={onClickSelectPayment} saleConfig={saleConfig}/>;
+  return <CheckoutWithSequencePay onClickSelectPayment={onClickSelectPayment} />;
 };
 
-export default Checkout;
+export default TestCheckout;

@@ -1,6 +1,6 @@
 import type { Chain } from "wagmi/chains";
-import { saleConfig } from "../saleConfig";
 import { getDefaultChains } from "@0xsequence/kit";
+import { saleConfig } from "../views/components/Testing";
 
 function getChainConfig(chainId: number): Chain {
   return getDefaultChains([chainId])[0];

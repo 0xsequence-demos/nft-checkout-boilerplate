@@ -1,26 +1,29 @@
-import { useSelectPaymentModal } from '@0xsequence/kit-checkout'
+import { SelectPaymentSettings, useSelectPaymentModal } from '@0xsequence/kit-checkout'
 import { encodeFunctionData, toHex } from "viem";
-import { useAccount } from "wagmi";
+import { useAccount, usePublicClient } from "wagmi";
 import CardButton from './CardButton';
+
+export const saleConfig = {
+  // ERC-20 contract # NATIVE token sale: for the native token sale, you should use ethers.ZeroAddress.
+  currencyAddress: "0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582",
+  // NFT Contract
+  nftTokenAddress: "0x280ab414233f42fd4261d8563be61d2b2c96d25d",
+  chainId: 80002, //polygonAmoy
+  // Modify here to show different item
+  itemForSale: "1",
+  // NFT price ($0.02) USDC
+  price: "0",
+};
 
 const Testing = () => {
   const { openSelectPaymentModal } = useSelectPaymentModal();
-	const { address } = useAccount();
+	const { address, chainId } = useAccount();
+  const publicClient = usePublicClient({
+    chainId: chainId,
+  });
 
 	const onClick = () => {
-    const saleConfig = {
-      // ERC-20 contract # NATIVE token sale: for the native token sale, you should use ethers.ZeroAddress.
-      currencyAddress: "0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582",
-      // NFT Contract
-      nftTokenAddress: "0x280ab414233f42fd4261d8563be61d2b2c96d25d",
-      // Primary Sales Erc1155 contract
-      salesContractAddress: "0xe65b75eb7c58ffc0bf0e671d64d0e1c6cd0d3e5b",
-      chainId: 80002, //polygonAmoy
-      // Modify here to show different item
-      itemForSale: "1",
-      // NFT price ($0.02) USDC
-      price: "0",
-    };
+    if (!address || !publicClient) return;
 
     const chainId = saleConfig.chainId;
     const recipientAddress = address;
@@ -542,10 +545,10 @@ const Testing = () => {
       args: [recipientAddress, saleConfig.itemForSale, "1", toHex(0)],
     });
 
-    const swapModalSettings = {
+    const swapModalSettings: SelectPaymentSettings = {
       collectibles: [
         {
-          tokenId: "1",
+          tokenId: saleConfig.itemForSale,
           quantity: "1",
         },
       ],
@@ -555,7 +558,7 @@ const Testing = () => {
       recipientAddress: address!,
       currencyAddress,
       collectionAddress,
-      enable: true,
+      isDev: true,
       creditCardProviders: [],
       copyrightText: "ⓒ2024 Sequence",
       onSuccess: (txnHash: string) => {
